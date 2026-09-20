@@ -1,3 +1,42 @@
 'use client';
-import {useState} from 'react';import {createClient} from '../../lib/supabase/client';
-export default function Login(){const[email,setEmail]=useState('');const[password,setPassword]=useState('');const[msg,setMsg]=useState('');const[busy,setBusy]=useState(false);async function submit(e:React.FormEvent){e.preventDefault();setBusy(true);setMsg('');const{error}=await createClient().auth.signInWithPassword({email,password});setBusy(false);if(error)setMsg(error.message);else location.href='/admin';}return <main className="min-h-screen grid place-items-center p-6 bg-slate-50"><form onSubmit={submit} className="w-full max-w-md rounded-3xl bg-white p-8 shadow-sm border border-slate-200"><div className="text-sm font-black tracking-[.18em] text-teal-700">DRIVER SUPERAPP</div><h1 className="mt-2 text-3xl font-black text-slate-950">Admin sign in</h1><p className="mt-2 text-slate-500">Use an approved admin account.</p><div className="mt-7 space-y-4"><input aria-label="Email" required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="w-full min-h-12 rounded-xl border px-4 outline-none focus:ring-2 focus:ring-teal-600"/><input aria-label="Password" required type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" className="w-full min-h-12 rounded-xl border px-4 outline-none focus:ring-2 focus:ring-teal-600"/><button disabled={busy} className="w-full min-h-12 rounded-xl bg-slate-950 text-white font-bold disabled:opacity-50">{busy?'Signing in…':'Sign in'}</button>{msg&&<p role="alert" className="text-sm font-semibold text-red-600">{msg}</p>}</div></form></main>}
+
+import Link from 'next/link';
+import {useState} from 'react';
+import {createClient} from '../../lib/supabase/client';
+
+export default function Login(){
+  const[email,setEmail]=useState('');
+  const[password,setPassword]=useState('');
+  const[msg,setMsg]=useState('');
+  const[busy,setBusy]=useState(false);
+
+  async function submit(e:React.FormEvent){
+    e.preventDefault();
+    setBusy(true);
+    setMsg('');
+    try {
+      const{error}=await createClient().auth.signInWithPassword({email,password});
+      if(error){ setMsg(error.message); return; }
+      window.location.href='/admin';
+    } catch {
+      setMsg('We could not sign you in right now. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return <main className="min-h-screen grid place-items-center p-6 bg-slate-50">
+    <form onSubmit={submit} className="w-full max-w-md rounded-3xl bg-white p-8 shadow-sm border border-slate-200">
+      <div className="text-sm font-black tracking-[.18em] text-teal-700">DRIVER SUPERAPP</div>
+      <h1 className="mt-2 text-3xl font-black text-slate-950">Welcome back</h1>
+      <p className="mt-2 text-slate-500">Sign in to continue.</p>
+      <div className="mt-7 space-y-4">
+        <input aria-label="Email" required type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" className="w-full min-h-12 rounded-xl border px-4 outline-none focus:ring-2 focus:ring-teal-600"/>
+        <input aria-label="Password" required type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" className="w-full min-h-12 rounded-xl border px-4 outline-none focus:ring-2 focus:ring-teal-600"/>
+        <button disabled={busy} className="w-full min-h-12 rounded-xl bg-slate-950 text-white font-bold disabled:opacity-50">{busy?'Signing in…':'Sign in'}</button>
+        {msg&&<p role="alert" className="text-sm font-semibold text-red-600">{msg}</p>}
+      </div>
+      <p className="mt-6 text-center text-sm text-slate-500">New to Driver SuperApp? <Link href="/sign-up" className="font-bold text-slate-950 hover:underline">Create account</Link></p>
+    </form>
+  </main>
+}

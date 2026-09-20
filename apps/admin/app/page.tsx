@@ -16,7 +16,7 @@ export default function HomePage(){
     <nav className={scrolled?'nav nav-scrolled':'nav'}>
       <Link href="/" className="brand"><span className="brand-mark">D</span><span>DRIVER<span>SUPERAPP</span></span></Link>
       <div className="nav-links"><a href="#services">Services</a><a href="#about">For business</a></div>
-      <div className="nav-actions"><Link href="/login" className="nav-login">Sign in</Link><Link href="/sign-up" className="nav-cta">Get started <span>↗</span></Link></div>
+      <div className="nav-actions"><Link href="/preview" className="nav-login">Sign in</Link><Link href="/sign-up" className="nav-cta">Get started <span>↗</span></Link></div>
     </nav>
 
     <section className="hero">
@@ -49,6 +49,6 @@ export default function HomePage(){
 
     <section id="about" className="statement"><div className="statement-inner"><p className="eyebrow dark">MADE HERE · MADE FOR HERE</p><h2>Local infrastructure.<br/><em>Global ambition.</em></h2><p>We are building the everyday digital layer for movement and commerce in Ethiopia — with a product experience that feels at home, from the first tap to the final delivery.</p><Link href="/sign-up">Join the platform <span>↗</span></Link></div></section>
 
-    <footer><div className="brand footer-brand"><span className="brand-mark">D</span><span>DRIVER<span>SUPERAPP</span></span></div><p>Mobility · Delivery · Commerce</p><div><Link href="/login">Sign in</Link><Link href="/sign-up">Create account</Link></div><small>© 2026 Driver SuperApp</small></footer>
+    <footer><div className="brand footer-brand"><span className="brand-mark">D</span><span>DRIVER<span>SUPERAPP</span></span></div><p>Mobility · Delivery · Commerce</p><div><Link href="/preview">Sign in</Link><Link href="/sign-up">Create account</Link></div><small>© 2026 Driver SuperApp</small></footer>
   </main>
 }

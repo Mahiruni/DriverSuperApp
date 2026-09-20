@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Driver SuperApp",
+    "slug": "driver-superapp-customer",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "driversuperapp",
+    "plugins": ["expo-router", "@rnmapbox/maps"],
+    "experiments": {"typedRoutes": true},
+    "android": {"package": "com.driversuperapp.customer"},
+    "ios": {"bundleIdentifier": "com.driversuperapp.customer"}
+  }
+}

@@ -1,10 +1,1 @@
-{
-  "name":"@driver-super-app/shared",
-  "version":"0.1.0",
-  "private":true,
-  "main":"src/index.ts",
-  "types":"src/index.ts",
-  "scripts":{"test":"vitest run","typecheck":"tsc --noEmit","lint":"eslint src --max-warnings=0"},
-  "dependencies":{"zod":"^4.1.8"},
-  "devDependencies":{"typescript":"latest","vitest":"latest","eslint":"latest"}
-}
+{"name":"@driver-super-app/shared","version":"0.1.0","private":true,"main":"src/index.ts","types":"src/index.ts","scripts":{"test":"vitest run","typecheck":"tsc --noEmit","lint":"prettier --check src"},"dependencies":{"zod":"^4.1.8"},"devDependencies":{"typescript":"latest","vitest":"latest"}}

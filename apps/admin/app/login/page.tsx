@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 import {useState} from 'react';
 import {createClient} from '../../lib/supabase/client';
 
 export default function Login(){
+  const router=useRouter();
   const[email,setEmail]=useState('');
   const[password,setPassword]=useState('');
   const[msg,setMsg]=useState('');
@@ -14,10 +16,35 @@ export default function Login(){
     e.preventDefault();
     setBusy(true);
     setMsg('');
+    const supabase=createClient();
     try {
-      const{error}=await createClient().auth.signInWithPassword({email,password});
+      const{data,error}=await supabase.auth.signInWithPassword({
+        email:email.trim().toLowerCase(),
+        password
+      });
       if(error){ setMsg(error.message); return; }
-      window.location.href='/admin';
+      if(!data.session||!data.user){
+        setMsg('Sign in did not create an active session. Please try again.');
+        return;
+      }
+
+      const{data:profile,error:profileError}=await supabase
+        .from('profiles')
+        .select('role,account_status')
+        .eq('id',data.user.id)
+        .maybeSingle();
+
+      if(profileError){
+        setMsg('Signed in, but we could not load your account. Please try again.');
+        return;
+      }
+
+      if(profile?.role==='admin'&&profile.account_status==='active'){
+        router.replace('/admin');
+      }else{
+        router.replace('/dashboard');
+      }
+      router.refresh();
     } catch {
       setMsg('We could not sign you in right now. Please try again.');
     } finally {

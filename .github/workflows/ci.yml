@@ -3,7 +3,6 @@ on:
   push:
     branches: [main]
   pull_request:
-
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -20,3 +19,4 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm lint
+      - run: pnpm --filter @driver-super-app/admin build

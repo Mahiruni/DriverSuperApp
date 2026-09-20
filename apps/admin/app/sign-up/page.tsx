@@ -4,6 +4,14 @@ import Link from 'next/link';
 import {useState} from 'react';
 import {createClient} from '../../lib/supabase/client';
 
+function normalizeEthiopianPhone(value:string){
+  const digits=value.trim().replace(/[^0-9+]/g,'');
+  if(/^09[0-9]{8}$/.test(digits)) return '+251'+digits.slice(1);
+  if(/^9[0-9]{8}$/.test(digits)) return '+251'+digits;
+  if(/^\+2519[0-9]{8}$/.test(digits)) return digits;
+  return '';
+}
+
 export default function SignUp() {
   const [name,setName]=useState('');
   const [email,setEmail]=useState('');
@@ -18,14 +26,25 @@ export default function SignUp() {
     setMsg('');
     if(password.length < 8){ setMsg('Password must be at least 8 characters.'); return; }
     if(password !== confirm){ setMsg('Passwords do not match.'); return; }
+
+    const normalizedPhone=normalizeEthiopianPhone(phone);
+    if(phone.trim() && !normalizedPhone){
+      setMsg('Enter a valid Ethiopian phone number, for example +251912345678.');
+      return;
+    }
+
     setBusy(true);
     try {
       const supabase=createClient();
+      const metadata:{full_name:string;phone?:string}={full_name:name.trim()};
+      if(normalizedPhone) metadata.phone=normalizedPhone;
+
       const {data,error}=await supabase.auth.signUp({
-        email,
+        email:email.trim().toLowerCase(),
         password,
-        options:{data:{full_name:name,phone:phone || null}}
+        options:{data:metadata}
       });
+
       if(error){ setMsg(error.message); return; }
       if(data.session){ window.location.href='/admin'; return; }
       setMsg('Account created. Check your email to verify your account, then sign in.');

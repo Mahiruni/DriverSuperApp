@@ -27,8 +27,36 @@ export function PhoneAuth({ onVerified }: { onVerified: () => void }) {
     setError(''); setLoading(true);
     try {
       const normalized = normalizeEthiopianPhone(phone);
-      const { error: authError } = await supabase.auth.verifyOtp({ phone: normalized, token: otp, type: 'sms' });
+      const { data: authData, error: authError } = await supabase.auth.verifyOtp({ phone: normalized, token: otp, type: 'sms' });
       if (authError) throw authError;
+      if (!authData.user) throw new Error('Authentication succeeded but no user session was returned');
+
+      const { data: existingProfile, error: profileReadError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', authData.user.id)
+        .maybeSingle();
+      if (profileReadError) throw profileReadError;
+
+      if (!existingProfile) {
+        const { data: city, error: cityError } = await supabase
+          .from('cities')
+          .select('id')
+          .eq('is_active', true)
+          .order('created_at', { ascending: true })
+          .limit(1)
+          .maybeSingle();
+        if (cityError) throw cityError;
+        if (!city) throw new Error('No active service city is configured');
+
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: authData.user.id,
+          phone: normalized,
+          role: 'customer',
+          city_id: city.id,
+        });
+        if (profileError) throw profileError;
+      }
       onVerified();
     } catch (e) { setError(e instanceof Error ? e.message : 'Invalid code'); }
     finally { setLoading(false); }

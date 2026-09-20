@@ -1,8 +1,8 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://mrbgtdrpscdoxwdgvfcs.supabase.co';
-const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? 'sb_publishable_7iNsTBn4QsGPZPkX2nOULA_awelYkSl';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -10,7 +10,7 @@ export async function updateSession(request: NextRequest) {
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll(items) {
-        items.forEach(({ name, value, options }) => request.cookies.set(name, value));
+        items.forEach(({ name, value }) => request.cookies.set(name, value));
         response = NextResponse.next({ request });
         items.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
       },

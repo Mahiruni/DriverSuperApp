@@ -1,34 +1,41 @@
 # DriverSuperApp
 
-Production foundation for an Ethiopia-focused mobility, delivery, and B2B ordering super app.
+Part 1 + Part 2 foundation for an Ethiopia-focused ride, delivery and B2B super app.
 
-## Part 1
+## Part 2 driver app
 
-- Turborepo + pnpm monorepo
-- Expo Customer App
-- Expo Driver App foundation
-- Next.js Admin foundation
-- Shared TypeScript/Zod/fare engine package
-- Supabase/Postgres/PostGIS migrations with RLS
-- Mapbox behind `MapsProvider`
-- Supabase phone OTP authentication
+`apps/driver` is an Expo React Native driver application using the existing Supabase project. It includes:
+
+- online/offline mode and foreground GPS publishing
+- realtime trip requests and accept/decline flow with a 30-second acceptance window
+- native map with pickup/destination/passenger markers and Mapbox navigation handoff
+- trip state controls
+- daily completed-trip earnings
+- shared rides with a database-enforced four-passenger limit
+- passenger invites using Ethiopian phone normalization
+- server-side passenger fare finalization using city fare configuration and shared-ride discount settings
+- configurable 25/50/100/200 Birr add-ons loaded from Supabase
+- idempotent add-on creation, server-side per-trip maximum, audit logging and 30-second undo
+- accessible 48px+ controls and resilient loading/empty/error states
+
+## Supabase
+
+Project schema now includes `shared_ride_passengers` and `driver_locations`, plus server RPCs:
+
+- `add_shared_ride_passenger`
+- `complete_shared_passenger`
+- `add_driver_addon`
+- `undo_driver_addon`
+
+Fare amounts are integer minor units. The client never computes a charge; it requests server-side results.
 
 ## Environment
 
-Never commit secrets. Copy `.env.example` files and configure Supabase/Mapbox credentials in your local or deployment environment.
+Use Expo public variables only for the Supabase project URL and publishable key. Never put service-role keys or other secrets in the mobile app.
 
-## Provider decisions
-
-Maps: Mapbox.
-Payments and SMS remain provider interfaces until a vendor is explicitly selected.
-
-## Development
-
-```bash
-corepack enable
-pnpm install
-pnpm dev
-pnpm lint
-pnpm typecheck
-pnpm test
+```env
+EXPO_PUBLIC_SUPABASE_URL=
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 ```
+
+Mapbox vendor integration remains behind the app navigation handoff/provider boundary; no access token is hard-coded.

@@ -152,3 +152,8 @@ $function$;
 
 revoke all on function public.accept_trip_request(uuid) from public, anon;
 grant execute on function public.accept_trip_request(uuid) to authenticated, service_role;
+
+
+alter publication supabase_realtime add table public.trips;
+alter publication supabase_realtime add table public.driver_locations;
+alter publication supabase_realtime add table public.notifications;

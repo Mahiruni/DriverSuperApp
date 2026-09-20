@@ -1,0 +1,1 @@
+{"expo":{"name":"Driver SuperApp Driver","slug":"driver-superapp-driver","version":"0.1.0","plugins":["expo-router"],"experiments":{"typedRoutes":true},"android":{"package":"com.driversuperapp.driver"},"ios":{"bundleIdentifier":"com.driversuperapp.driver"}}}

@@ -7,7 +7,8 @@ import { supabase } from '../../lib/supabase';
 import { MapboxMapsProvider, type Coordinates } from '../../providers/maps';
 
 const ADDIS: Coordinates = { latitude: 8.9806, longitude: 38.7578 };
-Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN ?? '');
+const MAPBOX_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN;
+if (MAPBOX_TOKEN) Mapbox.setAccessToken(MAPBOX_TOKEN);
 
 export default function Home() {
   const [pickup,setPickup]=useState<Coordinates>(ADDIS);

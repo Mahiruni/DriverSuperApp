@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 import {useState} from 'react';
 import {createClient} from '../../lib/supabase/client';
 
@@ -13,6 +14,7 @@ function normalizeEthiopianPhone(value:string){
 }
 
 export default function SignUp() {
+  const router=useRouter();
   const [name,setName]=useState('');
   const [email,setEmail]=useState('');
   const [phone,setPhone]=useState('');
@@ -46,7 +48,11 @@ export default function SignUp() {
       });
 
       if(error){ setMsg(error.message); return; }
-      if(data.session){ window.location.href='/admin'; return; }
+      if(data.session){
+        router.replace('/dashboard');
+        router.refresh();
+        return;
+      }
       setMsg('Account created. Check your email to verify your account, then sign in.');
     } catch {
       setMsg('We could not create your account right now. Please try again.');

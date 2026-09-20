@@ -7,16 +7,20 @@ const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KE
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
-  const supabase = createServerClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-    cookies: {
-      getAll: () => request.cookies.getAll(),
-      setAll(items) {
-        items.forEach(({ name, value }) => request.cookies.set(name, value));
-        response = NextResponse.next({ request });
-        items.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+  try {
+    const supabase = createServerClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll(items) {
+          items.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          items.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+        },
       },
-    },
-  });
-  await supabase.auth.getClaims();
+    });
+    await supabase.auth.getClaims();
+  } catch {
+    // Never turn a transient Supabase/auth outage into a site-wide 500.
+  }
   return response;
 }

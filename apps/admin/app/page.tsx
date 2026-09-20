@@ -1,0 +1,1 @@
+export default function AdminPage(){return <main style={{fontFamily:'system-ui',padding:40}}><p style={{color:'#0F766E',fontWeight:800}}>DRIVER SUPERAPP ADMIN</p><h1>Operations foundation</h1><p>City configuration, fares, drivers, suppliers, broadcasts, orders and audit tooling will be implemented in the admin phase.</p></main>}

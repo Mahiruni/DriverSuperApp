@@ -3,5 +3,5 @@
   "private":true,
   "packageManager":"pnpm@10.15.0",
   "scripts":{"build":"turbo run build","dev":"turbo run dev","lint":"turbo run lint","typecheck":"turbo run typecheck","test":"turbo run test","format":"prettier --write .","format:check":"prettier --check ."},
-  "devDependencies":{"@turbo/gen":"latest","eslint":"latest","prettier":"latest","turbo":"latest","typescript":"latest"}
+  "devDependencies":{"@eslint/js":"latest","@turbo/gen":"latest","eslint":"latest","prettier":"latest","turbo":"latest","typescript":"latest"}
 }

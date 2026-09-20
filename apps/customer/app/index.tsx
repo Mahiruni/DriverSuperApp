@@ -1,17 +1,19 @@
 import React,{useEffect,useState}from'react';
+import{useRouter}from'expo-router';
 import{Linking,Pressable,SafeAreaView,ScrollView,StyleSheet,Text,TextInput,View}from'react-native';
 import{createClient,Session}from'@supabase/supabase-js';
 const url=process.env.EXPO_PUBLIC_SUPABASE_URL??'';const key=process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY??'';const db=createClient(url,key);
 const TEAL='#0F766E',NAVY='#0B1F33',BG='#F6F8FA';
 const money=(n:number)=>`${Math.round(n/100).toLocaleString()} Birr`;
 export default function App(){
+ const router=useRouter();
  const[s,setS]=useState<Session|null>(null),[tab,setTab]=useState('home'),[pickup,setPickup]=useState(''),[drop,setDrop]=useState(''),[busy,setBusy]=useState(false),[msg,setMsg]=useState(''),[trip,setTrip]=useState<any>(null),[history,setHistory]=useState<any[]>([]);
  useEffect(()=>{if(!url||!key){setMsg('Supabase configuration is missing.');return}db.auth.getSession().then(({data})=>setS(data.session));const x=db.auth.onAuthStateChange((_e,v)=>setS(v));return()=>x.data.subscription.unsubscribe()},[]);
  useEffect(()=>{if(s)load()},[s]);
  async function load(){const{data}=await db.from('trips').select('id,state,pickup_label,destination_label,total_minor,requested_at').eq('customer_id',s!.user.id).order('requested_at',{ascending:false}).limit(8);if(data){setHistory(data);setTrip(data.find(x=>['requested','accepted','arriving','in_progress'].includes(x.state))??null)}}
  async function requestRide(){if(!s){setMsg('Sign in to request a ride.');return}if(!pickup.trim()||!drop.trim()){setMsg('Enter pickup and destination.');return}setBusy(true);const{data,error}=await db.from('trips').insert({customer_id:s.user.id,state:'requested',pickup_label:pickup.trim(),destination_label:drop.trim(),total_minor:0}).select().single();setBusy(false);if(error)setMsg(error.message);else{setTrip(data);setMsg('Ride requested. Finding a nearby driver…');load()}}
  async function cancel(){if(!trip)return;const{error}=await db.from('trips').update({state:'cancelled'}).eq('id',trip.id).eq('customer_id',s!.user.id);setMsg(error?.message??'Ride cancelled.');load()}
- if(!s)return <SafeAreaView style={st.center}><Text style={st.logo}>FERES-STYLE MOBILITY</Text><Text style={st.h1}>Move around Addis.</Text><Text style={st.muted}>Sign in with your existing customer account to request rides.</Text><Pressable style={st.btn} onPress={()=>setMsg('Open the account flow from the customer app.') }><Text style={st.white}>Get started</Text></Pressable>{msg?<Text style={st.notice}>{msg}</Text>:null}</SafeAreaView>;
+ if(!s)return <SafeAreaView style={st.center}><Text style={st.logo}>FERES-STYLE MOBILITY</Text><Text style={st.h1}>Move around Addis.</Text><Text style={st.muted}>Sign in with your existing customer account to request rides.</Text><Pressable style={st.btn} onPress={()=>router.push('/auth')}><Text style={st.white}>Sign in / Create account</Text></Pressable>{msg?<Text style={st.notice}>{msg}</Text>:null}</SafeAreaView>;
  return <SafeAreaView style={st.screen}>
   <View style={st.header}><View><Text style={st.kicker}>DRIVER SUPERAPP</Text><Text style={st.h1}>Where to?</Text></View><Pressable style={st.avatar} onPress={()=>setTab('profile')}><Text style={st.avatarText}>{(s.user.email??'U')[0].toUpperCase()}</Text></Pressable></View>
   {msg?<View style={st.noticeBox}><Text style={st.notice}>{msg}</Text></View>:null}

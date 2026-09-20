@@ -28,6 +28,14 @@ export default function Login(){
         return;
       }
 
+      if(!data.user.email_confirmed_at){
+        sessionStorage.setItem('driver-superapp:verification-email', data.user.email ?? email.trim().toLowerCase());
+        await supabase.auth.signInWithOtp({email:data.user.email ?? email.trim().toLowerCase(), options:{shouldCreateUser:false}});
+        router.replace('/verify-email');
+        router.refresh();
+        return;
+      }
+
       const{data:profile,error:profileError}=await supabase
         .from('profiles')
         .select('role,account_status')

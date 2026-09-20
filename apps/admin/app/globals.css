@@ -1,0 +1,4 @@
+@import 'tailwindcss';
+:root{--navy:#0b1f33;--teal:#0f766e;--canvas:#f6f8fa}
+body{margin:0;background:var(--canvas);color:var(--navy);font-family:ui-sans-serif,system-ui,sans-serif}
+button,input,select{font:inherit}

@@ -53,7 +53,19 @@ export default function SignUp() {
         router.refresh();
         return;
       }
-      setMsg('Account created. Check your email to verify your account, then sign in.');
+
+      const normalizedEmail=email.trim().toLowerCase();
+      sessionStorage.setItem('driver-superapp:verification-email', normalizedEmail);
+      const {error:otpError}=await supabase.auth.signInWithOtp({
+        email:normalizedEmail,
+        options:{shouldCreateUser:false}
+      });
+      if(otpError){
+        setMsg('Your account was created, but we could not send the verification code. Please try again from the verification page.');
+        return;
+      }
+      router.replace('/verify-email');
+      router.refresh();
     } catch {
       setMsg('We could not create your account right now. Please try again.');
     } finally {

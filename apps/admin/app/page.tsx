@@ -1,50 +1,54 @@
+'use client';
+
 import Link from 'next/link';
+import {useEffect,useState} from 'react';
 
-export default function HomePage() {
-  return (
-    <main className="min-h-screen bg-white text-slate-950">
-      <section className="mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 py-16 lg:px-10">
-        <div className="mb-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-sm font-bold text-white">D</div>
-            <span className="text-lg font-semibold tracking-tight">Driver Super App</span>
-          </div>
-          <Link href="/admin" className="rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold transition hover:border-slate-400">
-            Admin
-          </Link>
-        </div>
+const services=[
+  {n:'01',title:'Move',copy:'A better way across the city.',detail:'Request a ride, see your trip clearly, and move with confidence.',mark:'↗'},
+  {n:'02',title:'Deliver',copy:'From doorstep to doorstep.',detail:'Food, packages, groceries and everyday essentials — in one flow.',mark:'→'},
+  {n:'03',title:'Order',copy:'Business, without the friction.',detail:'Connect businesses with suppliers and keep orders moving.',mark:'＋'},
+];
 
-        <div className="max-w-4xl">
-          <p className="mb-5 text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Ethiopia • Addis Ababa</p>
-          <h1 className="text-5xl font-semibold tracking-[-0.04em] sm:text-7xl">
-            One app for moving, delivering, and doing business.
-          </h1>
-          <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
-            Your everyday platform for rides, deliveries, marketplace ordering, and business services.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Link href="/login" className="rounded-full bg-slate-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800">
-              Customer sign in
-            </Link>
-            <a href="#services" className="rounded-full border border-slate-200 px-6 py-3.5 text-sm font-semibold transition hover:border-slate-400">
-              Explore services
-            </a>
-          </div>
-        </div>
+export default function HomePage(){
+  const [scrolled,setScrolled]=useState(false);
+  useEffect(()=>{const on=()=>setScrolled(window.scrollY>24);window.addEventListener('scroll',on);return()=>window.removeEventListener('scroll',on)},[]);
+  return <main className="marketing">
+    <nav className={scrolled?'nav nav-scrolled':'nav'}>
+      <Link href="/" className="brand"><span className="brand-mark">D</span><span>DRIVER<span>SUPERAPP</span></span></Link>
+      <div className="nav-links"><a href="#services">Services</a><a href="#about">For business</a></div>
+      <div className="nav-actions"><Link href="/login" className="nav-login">Sign in</Link><Link href="/sign-up" className="nav-cta">Get started <span>↗</span></Link></div>
+    </nav>
 
-        <div id="services" className="mt-20 grid gap-4 sm:grid-cols-3">
-          {[
-            ['Rides', 'Request a ride and get where you need to go.'],
-            ['Delivery', 'Send food, goods, and packages across the city.'],
-            ['Business', 'Order and manage services for your business.'],
-          ].map(([title, description]) => (
-            <article key={title} className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
-              <h2 className="text-xl font-semibold">{title}</h2>
-              <p className="mt-2 leading-7 text-slate-600">{description}</p>
-            </article>
-          ))}
+    <section className="hero">
+      <div className="hero-grid" aria-hidden="true"></div>
+      <div className="hero-orbit orbit-one"></div><div className="hero-orbit orbit-two"></div>
+      <div className="hero-content">
+        <div className="eyebrow"><span className="live-dot"></span> BUILT FOR ETHIOPIA · STARTING IN ADDIS ABABA</div>
+        <h1>Move the city.<br/><em>Move forward.</em></h1>
+        <p className="hero-copy">One beautifully simple platform for rides, deliveries and business orders — designed around how Ethiopia moves.</p>
+        <div className="hero-actions"><Link href="/sign-up" className="hero-primary">Create your account <span>↗</span></Link><a href="#services" className="hero-secondary">Explore the platform <span>↓</span></a></div>
+        <div className="hero-meta"><span>01 / 03</span><span className="meta-line"></span><span>Mobility · Delivery · Commerce</span></div>
+      </div>
+      <div className="hero-visual" aria-hidden="true">
+        <div className="phone-shadow"></div>
+        <div className="phone">
+          <div className="phone-top"><span>9:41</span><span>● ● ●</span></div>
+          <div className="map"><div className="map-road r1"></div><div className="map-road r2"></div><div className="pin">D</div><div className="map-label">ADDIS ABABA</div></div>
+          <div className="ride-card"><div><small>YOUR RIDE</small><strong>Arriving in 3 min</strong></div><span className="mini-arrow">↗</span></div>
+          <div className="driver-row"><div className="avatar">M</div><div><strong>Mohammed</strong><small> Toyota Corolla · ★ 4.9</small></div><span>›</span></div>
         </div>
-      </section>
-    </main>
-  );
+      </div>
+    </section>
+
+    <section className="ticker"><div>RIDES <i>✦</i> DELIVERY <i>✦</i> BUSINESS <i>✦</i> ETHIOPIA <i>✦</i> RIDES <i>✦</i> DELIVERY <i>✦</i> BUSINESS <i>✦</i></div></section>
+
+    <section id="services" className="services section-pad">
+      <div className="section-head"><div><p className="eyebrow dark">THE PLATFORM</p><h2>Everything that moves,<br/><em>in one place.</em></h2></div><p>One account. One experience. Multiple ways to get things done — without the usual friction.</p></div>
+      <div className="service-grid">{services.map(s=><article className="service-card" key={s.title}><span className="service-num">{s.n}</span><div className="service-mark">{s.mark}</div><h3>{s.title}</h3><h4>{s.copy}</h4><p>{s.detail}</p><a href="/sign-up">Explore <span>↗</span></a></article>)}</div>
+    </section>
+
+    <section id="about" className="statement"><div className="statement-inner"><p className="eyebrow dark">MADE HERE · MADE FOR HERE</p><h2>Local infrastructure.<br/><em>Global ambition.</em></h2><p>We are building the everyday digital layer for movement and commerce in Ethiopia — with a product experience that feels at home, from the first tap to the final delivery.</p><Link href="/sign-up">Join the platform <span>↗</span></Link></div></section>
+
+    <footer><div className="brand footer-brand"><span className="brand-mark">D</span><span>DRIVER<span>SUPERAPP</span></span></div><p>Mobility · Delivery · Commerce</p><div><Link href="/login">Sign in</Link><Link href="/sign-up">Create account</Link></div><small>© 2026 Driver SuperApp</small></footer>
+  </main>
 }
